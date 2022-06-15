@@ -6,6 +6,7 @@ namespace App\Service\Providers\Developer;
 use App\Service\ProviderService;
 use App\Repository\DeveloperRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DeveloperProviderService extends ProviderService
@@ -21,18 +22,33 @@ class DeveloperProviderService extends ProviderService
     public function getData($dataId)
     {
         if ($this->healthStatus()){
-            $data = json_decode(file_get_contents($this->conf['url']), true);
             $found = false;
-            foreach ($data as $entry){
-                if (isset($entry['id']) && $entry['id'] !== ''){
-                    if ($entry['id'] == $dataId){
-                        $found = $entry;
-                        break;
+            $url = $this->conf['host'] . $this->conf['url'] . $this->conf['params'];
+            $options = array();
+            if ($this->conf['authorization'] != ''){
+                $options['headers'] = array('Authorization' => $this->conf['authorization']);
+            }
+
+            $response = $this->client->request($this->conf['method'], $url);
+            $statusCode = $response->getStatusCode();
+            if ($statusCode == JsonResponse::HTTP_OK){
+                $contentType = $response->getHeaders()['content-type'][0];
+                $content = $response->getContent();
+                $data = $response->toArray();
+                /*FOR TESTING LOOKING IN ALL COLLECTION*/
+                foreach ($data as $entry){
+                    if (isset($entry['id']) && $entry['id'] !== ''){
+                        if ($entry['id'] == $dataId){
+                            $found = $entry;
+                            break;
+                        }
                     }
                 }
+                /*END TESTING*/
             }
+            /*END principal code*/
             if (!$found){
-                throw new \Exception("Developer with id: " . $dataId . " NOT FOUND in DeveloperProvider");
+                throw new \Exception("Application with id: " . $dataId . " NOT FOUND in ApplicationProvider");
             }
             $developer = $this->updateEntityData($found);
         } else {
@@ -69,7 +85,25 @@ class DeveloperProviderService extends ProviderService
 
     public function healthStatus(): bool
     {
-        $response = file_exists($this->conf['url']);
-        return $response;
+        $result = false;
+        $url = $this->conf['host'];
+
+        try {
+            $response = $this->client->request('GET', $url);
+            $statusCode = $response->getStatusCode();
+            if ($statusCode == JsonResponse::HTTP_OK){
+                $result = true;
+            }
+        } catch (\Exception $e){
+            $result = false;
+        }
+
+        /*Assuming there is an external API and there is a method to GET the Developer data as the format described in the statement */
+        /* There will be here the code to simulate if the endpoint is available right now */
+        /* Using the client attribute from this service we can get a temporary request to test if the provider data is available */
+        /* If the service is not available the response is false */
+        /*END principal code*/
+
+        return $result;
     }
 }

@@ -7,19 +7,25 @@ parameters:
     providers:
         ApplicationProviderService:
             enable : '%env(PROVIDER_APP_ENABLE)%'
+            host: '%env(PROVIDER_APP_HOST)%'
             url: '%env(PROVIDER_APP_URL)%'
             method: '%env(PROVIDER_APP_METHOD)%'
             params: '%env(PROVIDER_APP_PARAMS)%'
+            authorization: '%env(PROVIDER_APP_AUTHORIZATION)%'
         DeveloperProviderService:
             enable : '%env(PROVIDER_DEVELOPER_ENABLE)%'
+            host: '%env(PROVIDER_DEVELOPER_HOST)%'
             url: '%env(PROVIDER_DEVELOPER_URL)%'
             method: '%env(PROVIDER_DEVELOPER_METHOD)%'
             params: '%env(PROVIDER_DEVELOPER_PARAMS)%'
+            authorization: '%env(PROVIDER_DEVELOPER_AUTHORIZATION)%'
         ExtraProviderService:
             enable: '%env(PROVIDER_EXTRA_ENABLE)%'
+            host: '%env(PROVIDER_EXTRA_HOST)%'
             url: '%env(PROVIDER_EXTRA_URL)%'
             method: '%env(PROVIDER_EXTRA_METHOD)%'
             params: '%env(PROVIDER_EXTRA_PARAMS)%'
+            authorization: '%env(PROVIDER_EXTRA_AUTHORIZATION)%'
 
 services:
     # default configuration for services in *this* file

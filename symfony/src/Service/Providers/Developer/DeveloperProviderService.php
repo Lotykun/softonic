@@ -36,7 +36,7 @@ class DeveloperProviderService extends ProviderService
             }
             $developer = $this->updateEntityData($found);
         } else {
-            $developers = $this->developerManager->findBy(array('applicationId' => $dataId));
+            $developers = $this->developerManager->findBy(array('developerId' => $dataId));
             if (count($developers) === 1){
                 $developer = $developers[0];
             } elseif (count($developers) === 0){

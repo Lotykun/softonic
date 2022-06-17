@@ -48,5 +48,20 @@
     "compatible": [
       "Windows 10"
     ]
+  },
+  {
+    "id": 3075334,
+    "developer_id": 801,
+    "title": "VLC",
+    "version": "2.4.0",
+    "url": "http://vlc.en.softonic.com",
+    "short_description": "Simply the best multi-format media player",
+    "license": "Free (GPL)",
+    "thumbnail": "https://screenshots.en.sftcdn.net/en/scrn/25000/25339/vlc-media-player-11-100x100.png",
+    "rating": 9,
+    "total_downloads": "5784268",
+    "compatible": [
+      "Windows 11"
+    ]
   }
 ]

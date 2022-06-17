@@ -13,6 +13,7 @@ use App\Service\Providers\Extra\ExtraProviderService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncode;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
@@ -47,6 +48,11 @@ class ApiController extends AbstractController
      */
     public function getApplicationAction($id, ApplicationProviderService $appProvider, DeveloperProviderService $developerProvider, ExtraProviderService $extraProvider) : Response
     {
+        $encoders = [new XmlEncoder(), new JsonEncoder()];
+        $normalizers = [new ObjectNormalizer()];
+
+        $serializer = new Serializer($normalizers, $encoders);
+
         try {
             /** @var Application $app */
             $app = $appProvider->getData($id);
@@ -61,16 +67,22 @@ class ApiController extends AbstractController
             }
             $object = new ApplicationResponse($app, $developer, $extra);
 
+        } catch (NotFoundHttpException $e) {
+            $object = new ApiErrorResponse(JsonResponse::HTTP_NOT_FOUND, $e->getMessage());
+            $content = $serializer->serialize($object, JsonEncoder::FORMAT, [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
+            $response = new Response($content, JsonResponse::HTTP_NOT_FOUND);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
         } catch (\Exception $e){
             $object = new ApiErrorResponse(JsonResponse::HTTP_INTERNAL_SERVER_ERROR, $e->getMessage());
+            $content = $serializer->serialize($object, JsonEncoder::FORMAT, [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
+            $response = new Response($content, JsonResponse::HTTP_INTERNAL_SERVER_ERROR);
+            $response->headers->set('Content-Type', 'application/json');
+            return $response;
         }
 
-        $encoders = [new XmlEncoder(), new JsonEncoder()];
-        $normalizers = [new ObjectNormalizer()];
-
-        $serializer = new Serializer($normalizers, $encoders);
-
-        $response = new Response($serializer->serialize($object, JsonEncoder::FORMAT, [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]));
+        $content = $serializer->serialize($object, JsonEncoder::FORMAT, [JsonEncode::OPTIONS => JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT]);
+        $response = new Response($content, JsonResponse::HTTP_OK);
         $response->headers->set('Content-Type', 'application/json');
         return $response;
     }

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<items type="extra">
+    <item id="1">
+        <attribute name="attr1">value1</attribute>
+    </item>
+    <item id="2">
+        <attribute name="attr1">value1</attribute>
+    </item>
+    <item id="3">
+        <attribute name="attr1">value1</attribute>
+    </item>
+    <item id="4">
+        <attribute name="attr1">value1</attribute>
+    </item>
+</items>

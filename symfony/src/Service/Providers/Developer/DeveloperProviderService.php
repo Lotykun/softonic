@@ -3,10 +3,12 @@
 
 namespace App\Service\Providers\Developer;
 
+use App\Entity\Developer;
 use App\Service\ProviderService;
 use App\Repository\DeveloperRepository;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class DeveloperProviderService extends ProviderService
@@ -46,17 +48,17 @@ class DeveloperProviderService extends ProviderService
                 }
                 /*END TESTING*/
             }
-            /*END principal code*/
             if (!$found){
-                throw new \Exception("Application with id: " . $dataId . " NOT FOUND in ApplicationProvider");
+                throw new NotFoundHttpException("Developer with id: " . $dataId . " NOT FOUND in DeveloperProvider");
             }
+            /** @var Developer $developer */
             $developer = $this->updateEntityData($found);
         } else {
             $developers = $this->developerManager->findBy(array('developerId' => $dataId));
             if (count($developers) === 1){
                 $developer = $developers[0];
             } elseif (count($developers) === 0){
-                throw new \Exception("Developer with id: " . $dataId . " NOT FOUND in BackupDeveloperProvider");
+                throw new NotFoundHttpException("Developer with id: " . $dataId . " NOT FOUND in DeveloperProvider");
             } else {
                 throw new \Exception("There are more than one Developer with id: " . $dataId . " in BackupDeveloperProvider");
             }
@@ -72,7 +74,7 @@ class DeveloperProviderService extends ProviderService
         } elseif (count($developers) === 1){
             $developer = $developers[0];
         } else {
-            throw new \Exception("Developer with id: " . $data['id'] . " NOT FOUND in BackupDeveloperProvider");
+            throw new NotFoundHttpException("Developer with id: " . $data['id'] . " NOT FOUND in BackupDeveloperProvider");
         }
         $developer->setDeveloperId($data['id']);
         $developer->setName($data['name']);
@@ -91,7 +93,7 @@ class DeveloperProviderService extends ProviderService
         try {
             $response = $this->client->request('GET', $url);
             $statusCode = $response->getStatusCode();
-            if ($statusCode == JsonResponse::HTTP_OK){
+            if ($statusCode == JsonResponse::HTTP_OK || $statusCode == JsonResponse::HTTP_NOT_FOUND){
                 $result = true;
             }
         } catch (\Exception $e){

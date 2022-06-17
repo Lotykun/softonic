@@ -10,6 +10,7 @@ use App\Repository\DeveloperRepository;
 use App\Service\ProviderService;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ApplicationProviderService extends ProviderService
@@ -56,7 +57,7 @@ class ApplicationProviderService extends ProviderService
             }
             /*END principal code*/
             if (!$found){
-                throw new \Exception("Application with id: " . $dataId . " NOT FOUND in ApplicationProvider");
+                throw new NotFoundHttpException("Application with id: " . $dataId . " NOT FOUND in ApplicationProvider");
             }
             $app = $this->updateEntityData($found);
         } else {
@@ -64,7 +65,7 @@ class ApplicationProviderService extends ProviderService
             if (count($apps) === 1){
                 $app = $apps[0];
             } elseif (count($apps) === 0){
-                throw new \Exception("Application with id: " . $dataId . " NOT FOUND in BackupApplicationProvider");
+                throw new NotFoundHttpException("Application with id: " . $dataId . " NOT FOUND in BackupApplicationProvider");
             } else {
                 throw new \Exception("There are more than one Application with id: " . $dataId . " in BackupApplicationProvider");
             }
@@ -112,9 +113,9 @@ class ApplicationProviderService extends ProviderService
 
         foreach ($data['compatible'] as $compatible){
             $compatibles = $this->applicationCompatibleManager->findBy(array('compatible' => $compatible));
-            if (count($developers) === 1){
+            if (count($compatibles) === 1){
                 $appCompatible = $compatibles[0];
-            } elseif (count($developers) === 0){
+            } elseif (count($compatibles) === 0){
                 $appCompatible = $this->applicationCompatibleManager->create();
             } else {
                 throw new \Exception("There are more than one Compatible with name: " . $compatible);

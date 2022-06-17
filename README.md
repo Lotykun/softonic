@@ -68,16 +68,12 @@ _src_
 Se encuentra toda la lógica de la aplicación esta compuesto por:
   * Los controladores
   * Las Entidades
-  * Las Entidades Tipo Formualrios
+  * Los SErvicios de Proveedores
   * Servicios de Repositorio, estos servicios son los encargados de realizar las funciones especifas de base de datos    
 ```
 _public_
 ```
-Directorio publico que se muestra en el front, se trata de un directorio dinámico que se genera gracias a la compilacion de webpack      
-```
-_templates_
-```
-Este directorio almacena las plantillas twig para el renderizado del front      
+Directorio publico que se muestra en el front      
 ```
 _tests_
 ```

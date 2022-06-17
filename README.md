@@ -127,7 +127,7 @@ Editar el archivo agregar la siguiente linea
 ```
 _Levantar Nginx encaso de que no este up_
 ```
-softonic (master)$ docker-start nginx_softonic
+softonic (master)$ docker start nginx_softonic
 ```
 ### Comprobación y Tests 🔧
 _Acceder a un navegador y ejecutar la siguiente url_

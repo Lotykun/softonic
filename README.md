@@ -106,7 +106,7 @@ softonic (master)$ docker-compose up -d --build
 _Importar datos a la base de datos_
 ```
 softonic (master)$ docker cp dump.sql mysql_softonic:/dump.sql
-softonic (master)$ docker exec mysql_softonic /bin/bash -c 'mysql -uroot -proot < /dump.sql'
+softonic (master)$ docker exec mysql_softonic /bin/bash -c 'mysql -uroot -proot symfony_db < /dump.sql'
 ```
 _Instalar dependencias symfony_
 ```
@@ -117,7 +117,7 @@ softonic (master)$ docker exec -i -t php_softonic /bin/bash
 _Setear Dominio de Test en hosts de Docker_
 ```
 softonic (master)$ docker exec -i -t php_softonic /bin/bash
-/var/www/symfony# nano /etc/hosts
+/var/www/symfony# vim /etc/hosts
 Editar el archivo agregar la siguiente linea
     {IP_HOST}       softonic.test.com
 ```

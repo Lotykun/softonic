@@ -59,6 +59,10 @@ _Config_
 ```
 Necesario para toda la configuracion de la aplicacion  
 ```
+_Archivos ENV_
+```
+Para la configuracion de las variables de entorno de cada entorno, aqui se setea la info sobre los providers 
+```
 _src_
 ```
 Se encuentra toda la lógica de la aplicación esta compuesto por:
@@ -88,6 +92,7 @@ _Estas instrucciones te permitirán obtener una copia del proyecto en funcionami
 * Asegurar que el puerto 3306 esta libre
 * Instalar docker y docker-compose | https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-compose-on-ubuntu-20-04-es
 * Hacer al usuario actual permisos de uso en docker y docker-compose (para no tener que ejecutar los comandos de docker-compose con 'sudo')
+* Obtener IP de Máquina Local (depende de SO) => {IP_HOST}
 * Editar el archivo /etc/hosts y agregar la siguiente linea
     127.0.0.1       softonic.test.com
 * Instalar git
@@ -100,30 +105,29 @@ $ git clone https://github.com/Lotykun/softonic.git
 _Acceder a carpeta y levantar contenedores_
 ```
 $ cd softonic/
-softonic (main)$ docker-compose up -d --build
+softonic (master)$ docker-compose up -d --build
 ```
 _Importar datos a la base de datos_
 ```
-softonic (main)$ docker cp dump.sql mysql_softonic:/dump.sql
-softonic (main)$ docker exec mysql_softonic /bin/bash -c 'mysql -uroot -proot < /dump.sql'
+softonic (master)$ docker cp dump.sql mysql_softonic:/dump.sql
+softonic (master)$ docker exec mysql_softonic /bin/bash -c 'mysql -uroot -proot < /dump.sql'
 ```
 _Instalar dependencias symfony_
 ```
-doofinder (main)$ docker exec -i -t php_softonic /bin/bash
+softonic (master)$ docker exec -i -t php_softonic /bin/bash
 /var/www/symfony# composer install
 /var/www/symfony# exit
 ```
 _Setear Dominio de Test en hosts de Docker_
 ```
-{OBTENER IP LOCAL DE MAQUINA (depende de SO)} = {IP_HOST}
-doofinder (main)$ docker exec -i -t php_softonic /bin/bash
+softonic (master)$ docker exec -i -t php_softonic /bin/bash
 /var/www/symfony# nano /etc/hosts
 Editar el archivo agregar la siguiente linea
     {IP_HOST}       softonic.test.com
 ```
 _Levantar Nginx encaso de que no este up_
 ```
-doofinder (main)$ docker-start nginx_softonic
+softonic (master)$ docker-start nginx_softonic
 ```
 ### Comprobación y Tests 🔧
 _Acceder a un navegador y ejecutar la siguiente url_
@@ -134,20 +138,21 @@ http://softonic.test.com/api/
 ```
 _Ejecucion Modo CLI_
 ```
-softonic (main)$ docker exec php_softonic /bin/bash -c 'bin/console app:get-application id=3075333'
+ * softonic (master)$ docker exec php_softonic /bin/bash -c 'bin/console app:get-application id=3075333'
+ * softonic (master)$ curl --location --request GET 'http://softonic.test.com/api/application/3075333'
 ```
 _Ejecución de Tests PHPUnit_
 
 En la ruta tests/ se encuentran los tests a ejecutar, cada nombre de función, especifica que tipo de test se realiza
 ```
-softonic (main)$ docker exec -i -t php_softonic /bin/bash
+softonic (master)$ docker exec -i -t php_softonic /bin/bash
 /var/www/symfony# bin/phpunit
 ```
 _Ejecucion Requests Colección Postman_
 
 Importar la coleccion Postman del archivo
 ```
-doofinder (main)$ doofinder.postman_collection.json
+softonic (master)$ softonic.postman_collection.json
 ```
 # POSIBLES MEJORAS A REALIZAR
 _* Agregar sistema de Cacheo tipo Redis o Varnish para mejorar el rendimiento_

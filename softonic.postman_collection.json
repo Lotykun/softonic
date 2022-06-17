@@ -1,0 +1,54 @@
+{
+	"info": {
+		"_postman_id": "ee768158-fb3b-4c53-9ce5-e23ec12d49b7",
+		"name": "softonic",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "10981929"
+	},
+	"item": [
+		{
+			"name": "getApplication",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://softonic.test.com/api/application/3075333",
+					"protocol": "http",
+					"host": [
+						"softonic",
+						"test",
+						"com"
+					],
+					"path": [
+						"api",
+						"application",
+						"3075333"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "getApplicationNotFound",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://softonic.test.com/api/application/3075666",
+					"protocol": "http",
+					"host": [
+						"softonic",
+						"test",
+						"com"
+					],
+					"path": [
+						"api",
+						"application",
+						"3075666"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
